@@ -24,7 +24,7 @@ while running:
     clock.tick(FPS)
     i += 1
     if i % 2 == 0:
-        screen.fill("BLACK")
+        screen.fill("BLACK") # приступ эпилепсии
     else:
         screen.fill("RED")
     pygame.display.flip()
