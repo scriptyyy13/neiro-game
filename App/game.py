@@ -1,12 +1,15 @@
 import pygame
 import random
+from screen import *
 
 
 class Game(object):
     def __init__(self):
         self.clock = pygame.time.Clock()  # для плавности
-        self.screen = pygame.display.set_mode((640, 480))  # окно игры
         self.running = True  # работа игры
+
+    def run(self):
+        pass
 
     def draw(self):
         pass
@@ -16,3 +19,9 @@ class Game(object):
 
     def collision_check(self):
         pass
+
+if __name__ == '__main__':
+    game = Game()
+    screen = Screen()
+    while game.running:
+        a = 1

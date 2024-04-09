@@ -6,7 +6,7 @@ import random
 
 class Screen(object):
     def __init__(self):
-        self.something = 2
+        self.screen = pygame.display.set_mode((640, 480))  # окно игры
 
     def update(self):
         pass
