@@ -11,7 +11,3 @@ class Screen(object):
     def update(self):
         pygame.display.update()
         self.clock.tick(FPS)
-
-    def draw_snake(self):
-        pass
-

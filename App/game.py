@@ -17,8 +17,7 @@ class Game(object):
 
     def draw(self):
         self.screen.screen.fill(WHITE)
-        # pygame.draw.rect(self.screen.screen, (0,0,0), pygame.Rect(30, 30, 60, 60))
-
+        self.snake.draw_snake(self.snake.coords, self.screen.screen)
         self.screen.update()
 
     def update(self):
