@@ -12,7 +12,7 @@ class Snake(object):
         self.coords = [[5, 9]]  # координаты головы
 
     def update(self):
-        new_pice = [self.coords[-1][0]+self.vector[0], self.coords[-1][1]+self.vector[1]] # создание след. кусочка змейки
+        new_pice = [self.coords[-1][0]+self.vector[0], self.coords[-1][1]+self.vector[1]]  # создание след. кусочка змейки
         if (self.length == len(self.coords)):
             del self.coords[0] # удаление предыдущего кусочка змейки
         self.coords.append(new_pice)

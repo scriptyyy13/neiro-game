@@ -14,13 +14,10 @@ class Food(object):
         pygame.draw.rect(screen, (0, 240, 0),
                          pygame.Rect(self.food_pos[0] * self.step, self.food_pos[1] * self.step, self.step, self.step))
 
-    def spawn(self, pos):  # спавн еды где-то на поле
+    def update(self, pos):  # спавн еды где-то на поле и деспавн при поедании
         posx = self.food_pos[0]
         posy = self.food_pos[1]
         while [posx, posy] in pos:
-            posx = random.randint(1, 15)
-            posy = random.randint(1, 15)
+            posx = random.randint(1, BOARD_SIZE[0] // self.step)
+            posy = random.randint(1, BOARD_SIZE[1] // self.step)
             self.food_pos = (posx, posy)
-
-    def disappear(self):  # исчезновение еды
-        pass

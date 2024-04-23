@@ -18,10 +18,9 @@ class Game(object):
             for event in pygame.event.get():
                 self.event_handler(event)
             self.snake.update()
-            if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[
-                1]):
-                self.snake.length += 1
-            self.food.spawn(self.snake.coords)
+            if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
+                self.snake.length += 1 # увеличиваем на 1 змейку, при поедании еды
+            self.food.update(self.snake.coords)
             self.draw()
 
     def draw(self):
