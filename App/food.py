@@ -8,7 +8,8 @@ class Food(object):
         self.time = FOOD_TIME_DIS  # время на исчезновение еды
         self.type = FOOD_TYPE  # типы еды (измененные спрайты)
         self.step = SNAKE_STEP  # размер сетки
-        self.food_pos = (2, 1)  # позиция еды
+        self.food_pos = (5, 9)  # позиция еды
+        self.s_size = SCREEN_SIZE # размер экрана, для отрисовки
 
     def draw(self, screen):  # отрисовка еды
         pygame.draw.rect(screen, (0, 240, 0),
@@ -18,6 +19,6 @@ class Food(object):
         posx = self.food_pos[0]
         posy = self.food_pos[1]
         while [posx, posy] in pos:
-            posx = random.randint(1, BOARD_SIZE[0] // self.step)
-            posy = random.randint(1, BOARD_SIZE[1] // self.step)
-            self.food_pos = (posx, posy)
+            posx = random.randint(1, ((self.s_size[0]-(self.step*2)) // self.step))
+            posy = random.randint(1,(((self.s_size[1]-100)-(self.step*2))//self.step))
+        self.food_pos = (posx, posy)

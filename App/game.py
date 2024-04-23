@@ -3,6 +3,7 @@ import random
 from screen import *
 from snake import *
 from food import *
+from board import *
 from const import *
 
 
@@ -10,6 +11,7 @@ class Game(object):
     def __init__(self):
         self.running = True  # работа игры
         self.screen = Screen()  # создаем окно игры
+        self.board = Board()  # создаем окно игры
         self.snake = Snake()  # змейка
         self.food = Food()  # еда змейки
 
@@ -25,6 +27,7 @@ class Game(object):
 
     def draw(self):
         self.screen.screen.fill(WHITE)
+        self.board.draw(self.screen.screen)
         self.snake.draw_snake(self.snake.coords, self.screen.screen)
         self.food.draw(self.screen.screen)
         self.screen.update()
