@@ -14,18 +14,20 @@ class Game(object):
         self.food = Food()  # еда змейки
 
     def run(self):
-
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
             self.snake.update()
+            if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[
+                1]):
+                self.snake.length += 1
             self.food.spawn(self.snake.coords)
             self.draw()
 
     def draw(self):
         self.screen.screen.fill(WHITE)
-        self.food.draw(self.screen.screen)
         self.snake.draw_snake(self.snake.coords, self.screen.screen)
+        self.food.draw(self.screen.screen)
         self.screen.update()
 
     def update(self):

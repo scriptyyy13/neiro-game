@@ -11,9 +11,6 @@ class Snake(object):
         self.step = SNAKE_STEP  # размер сетки змейки
         self.coords = [[5, 9]]  # координаты головы
 
-    def set_vector(self):
-        pass
-
     def update(self):
         new_pice = [self.coords[-1][0]+self.vector[0], self.coords[-1][1]+self.vector[1]] # создание след. кусочка змейки
         if (self.length == len(self.coords)):
