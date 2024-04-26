@@ -1,11 +1,13 @@
 import pygame
 import random
+
 from screen import *
 from snake import *
 from food import *
 from board import *
 from const import *
 
+pygame.font.init()
 
 class Game(object):
     def __init__(self):
@@ -14,6 +16,8 @@ class Game(object):
         self.board = Board()  # создаем окно игры
         self.snake = Snake()  # змейка
         self.food = Food()  # еда змейки
+        self.font = pygame.font.SysFont('MS Gothic', 30) # шрифт
+        self.score = 0 # счет
 
     def run(self):
         while self.running:
@@ -29,6 +33,7 @@ class Game(object):
 
             if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
                 self.snake.length += 1 # увеличиваем на 1 змейку, при поедании еды
+                self.score+=1
             self.food.update(self.snake.coords)
             self.draw()
 
@@ -37,6 +42,8 @@ class Game(object):
         self.board.draw(self.screen.screen)
         self.snake.draw_snake(self.snake.coords, self.screen.screen)
         self.food.draw(self.screen.screen)
+        text_surface = self.font.render(str(self.score), False, (0, 0, 0))
+        self.screen.screen.blit(text_surface, (40, 400))
         self.screen.update()
 
     def update(self):
