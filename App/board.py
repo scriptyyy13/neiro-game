@@ -20,3 +20,8 @@ class Board(object):
         pygame.draw.rect(screen, (240, 240, 0),
                          pygame.Rect(0, ((self.s_size[1]-100)//self.step)*self.step, self.s_size[0], self.step))
 
+    def get_wall_x(self): # получение стен по бокам (только x)
+        return (0, ((self.s_size[0]-self.step) // self.step))
+
+    def get_wall_y(self): # получение верхней и нижней стены (только y)
+        return (0, ((self.s_size[1]-100)//self.step))

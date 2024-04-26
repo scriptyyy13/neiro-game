@@ -20,6 +20,13 @@ class Game(object):
             for event in pygame.event.get():
                 self.event_handler(event)
             self.snake.update()
+
+            if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] == self.snake.coords[-1][0]):
+                self.snake.snake_reset() # ресет змейки при врезании в стены по бокам
+
+            if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] == self.snake.coords[-1][1]):
+                self.snake.snake_reset() # ресет змейки при врезании в стены сверху и снизу
+
             if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
                 self.snake.length += 1 # увеличиваем на 1 змейку, при поедании еды
             self.food.update(self.snake.coords)
