@@ -20,7 +20,10 @@ class Snake(object):
         new_pice = [self.coords[-1][0]+self.vector[0], self.coords[-1][1]+self.vector[1]]  # создание след. кусочка змейки
         if (self.length == len(self.coords)):
             del self.coords[0] # удаление предыдущего кусочка змейки
-        self.coords.append(new_pice)
+        if (new_pice not in self.coords): # если там нет змейки, то все ок
+            self.coords.append(new_pice)
+        else: # сброс змейки при врезании в себя
+            self.snake_reset()
 
     def draw_snake(self, coords, screen):
         for i in range(len(coords)):
