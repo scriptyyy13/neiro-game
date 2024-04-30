@@ -19,6 +19,6 @@ class Food(object):
         posx = self.food_pos[0]
         posy = self.food_pos[1]
         while [posx, posy] in pos:
-            posx = random.randint(1, ((self.s_size[0]-(self.step*2)) // self.step))
-            posy = random.randint(1,(((self.s_size[1]-100)-(self.step*2))//self.step))
+            posx = random.randint(2, ((self.s_size[0]-(self.step*2)) // self.step)-1)
+            posy = random.randint(2, (((self.s_size[1]-100)-(self.step*2))//self.step)-1)
         self.food_pos = (posx, posy)
