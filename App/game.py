@@ -25,10 +25,9 @@ class Game(object):
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
-            print(self.api.is_near_obs(self.snake.coords))
-
+            print(self.api.is_near_obs(self.snake.coords, (self.board.get_wall_x(), self.board.get_wall_y())),  self.snake.coords[-1])
             if (SNAKE_AUTO == 1):
-                self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos), self.api.is_near_snake(self.snake.coords))
+                self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos))
 
             self.snake.update()
 
