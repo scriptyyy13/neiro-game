@@ -51,17 +51,7 @@ class Game(object):
             self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos))
 
         self.snake.update()
-
-        if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
-                self.snake.coords[-1][0]):
-            self.snake.snake_reset()  # ресет змейки при врезании в стены по бокам
-        if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] ==
-                self.snake.coords[-1][1]):
-            self.snake.snake_reset()  # ресет змейки при врезании в стены сверху и снизу
-
-        if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
-            self.snake.length += 10  # увеличиваем на 1 змейку, при поедании еды
-            self.snake.score += 1
+        self.collision_check()
         self.food.update(self.snake.coords)
 
     def event_handler(self, event):
@@ -78,7 +68,16 @@ class Game(object):
                 self.snake.vector = (1, 0)
 
     def collision_check(self):
-        pass
+        if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
+                self.snake.coords[-1][0]):
+            self.snake.snake_reset()  # ресет змейки при врезании в стены по бокам
+        if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] ==
+                self.snake.coords[-1][1]):
+            self.snake.snake_reset()  # ресет змейки при врезании в стены сверху и снизу
+
+        if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
+            self.snake.length += 1  # увеличиваем на 1 змейку, при поедании еды
+            self.snake.score += 1
 
 
 if __name__ == '__main__':
