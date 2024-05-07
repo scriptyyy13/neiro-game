@@ -5,7 +5,6 @@ from const import *
 
 class Food(object):
     def __init__(self):
-        self.time = FOOD_TIME_DIS  # время на исчезновение еды
         self.type = FOOD_TYPE  # типы еды (измененные спрайты)
         self.step = SNAKE_STEP  # размер сетки
         self.food_pos = (5, 9)  # позиция еды

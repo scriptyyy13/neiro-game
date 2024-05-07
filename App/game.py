@@ -22,7 +22,7 @@ class Game(object):
         self.best_score = 0 # лучший счет
 
     def run(self):
-        self.api.walls = (self.board.get_wall_x(), self.board.get_wall_y())
+        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
@@ -46,8 +46,10 @@ class Game(object):
         self.screen.update()
 
     def update(self):
+        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
+
         if (SNAKE_AUTO == 1):
-            self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos))
+            self.snake.auto_hodilka(self.api.snake_to_food())
 
         self.snake.update()
         self.collision_check()

@@ -8,36 +8,38 @@ class Api(object):
         self.step = SNAKE_STEP  # размер сетки
         self.coords = []
         self.walls = ((0, 0), (0, 0))
+        self.food = (0, 0)
 
-    def snake_to_food(self, coords, food):
-        coords = coords[-1]
-        one = coords[0] - food[0]
-        two = coords[1] - food[1]
+    def snake_to_food(self):
+        self.coords = self.coords[-1]
+        one = self.coords[0] - self.food[0]
+        two = self.coords[1] - self.food[1]
         return (one, two)
 
-    def is_near_obs(self, coords, walls):
-        return [self.is_near_px(coords, walls), self.is_near_mx(coords, walls), self.is_near_py(coords, walls), self.is_near_my(coords, walls)]
+    def is_near_obs(self):
+        return [self.is_near_px(), self.is_near_mx(), self.is_near_py(), self.is_near_my()]
 
-    def is_near_px(self, coords, walls):
-        snake_head = coords[-1]
+    def is_near_px(self):
+        snake_head = self.coords[-1]
         next = [snake_head[0] + 1, snake_head[1]]
-        return ((next in coords) or next == [walls[0][1], snake_head[1]])
+        return ((next in self.coords) or next == [self.walls[0][1], snake_head[1]])
 
-    def is_near_mx(self, coords, walls):
-        snake_head = coords[-1]
+    def is_near_mx(self):
+        snake_head = self.coords[-1]
         next = [snake_head[0] - 1, snake_head[1]]
-        return ((next in coords) or next == [0, snake_head[1]])
+        return ((next in self.coords) or next == [0, snake_head[1]])
 
-    def is_near_py(self, coords, walls):
-        snake_head = coords[-1]
+    def is_near_py(self):
+        snake_head = self.coords[-1]
         next = [snake_head[0], snake_head[1] - 1]
-        return ((next in coords) or next == [snake_head[0], 0])
+        return ((next in self.coords) or next == [snake_head[0], 0])
 
-    def is_near_my(self, coords, walls):
-        snake_head = coords[-1]
+    def is_near_my(self):
+        snake_head = self.coords[-1]
         next = [snake_head[0], snake_head[1] + 1]
-        return ((next in coords) or next == [snake_head[0], walls[1][1]])
+        return ((next in self.coords) or next == [snake_head[0], self.walls[1][1]])
 
-
-    def update(self, coords, food):
-        pass
+    def update(self, coords, food, walls):
+        self.coords = coords
+        self.food = food
+        self.walls = walls
