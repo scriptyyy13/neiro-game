@@ -22,25 +22,13 @@ class Game(object):
         self.best_score = 0 # лучший счет
 
     def run(self):
+        self.api.walls = (self.board.get_wall_x(), self.board.get_wall_y())
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
             print(self.api.is_near_obs(self.snake.coords, (self.board.get_wall_x(), self.board.get_wall_y())),  self.snake.coords[-1])
-            if (SNAKE_AUTO == 1):
-                self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos))
 
-            self.snake.update()
-
-            if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] == self.snake.coords[-1][0]):
-                self.snake.snake_reset() # ресет змейки при врезании в стены по бокам
-
-            if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] == self.snake.coords[-1][1]):
-                self.snake.snake_reset() # ресет змейки при врезании в стены сверху и снизу
-
-            if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
-                self.snake.length += 1 # увеличиваем на 1 змейку, при поедании еды
-                self.snake.score+=1
-            self.food.update(self.snake.coords)
+            self.update()
 
             if (self.snake.score > self.best_score):
                 self.best_score = self.snake.score
@@ -59,7 +47,22 @@ class Game(object):
         self.screen.update()
 
     def update(self):
-        pass
+        if (SNAKE_AUTO == 1):
+            self.snake.auto_hodilka(self.api.snake_to_food(self.snake.coords, self.food.food_pos))
+
+        self.snake.update()
+
+        if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
+                self.snake.coords[-1][0]):
+            self.snake.snake_reset()  # ресет змейки при врезании в стены по бокам
+        if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] ==
+                self.snake.coords[-1][1]):
+            self.snake.snake_reset()  # ресет змейки при врезании в стены сверху и снизу
+
+        if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
+            self.snake.length += 10  # увеличиваем на 1 змейку, при поедании еды
+            self.snake.score += 1
+        self.food.update(self.snake.coords)
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:
