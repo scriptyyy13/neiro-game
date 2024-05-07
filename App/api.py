@@ -17,7 +17,7 @@ class Api(object):
 
     def is_near_obs(self, coords, walls):
         snake_head = coords[-1]
-        x_right = [snake_head[0] + 1, snake_head[1]]
+        x_right = [snake_head[0] + 1, snake_head[1]] # тут везде используются массивы, так как массив из частей змейки состоит из массивов
         x_left = [snake_head[0] - 1, snake_head[1]]
         y_up = [snake_head[0], snake_head[1] - 1]
         y_down = [snake_head[0], snake_head[1] + 1]
