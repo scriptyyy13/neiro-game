@@ -26,7 +26,6 @@ class Game(object):
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
-            print(self.api.is_near_obs(self.snake.coords, (self.board.get_wall_x(), self.board.get_wall_y())),  self.snake.coords[-1])
 
             self.update()
 
