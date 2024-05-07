@@ -16,7 +16,6 @@ class Api(object):
         return (one, two)
 
     def is_near_obs(self, coords, walls):
-        snake_head = coords[-1]
         return [self.is_near_px(coords, walls), self.is_near_mx(coords, walls), self.is_near_py(coords, walls), self.is_near_my(coords, walls)]
 
     def is_near_px(self, coords, walls):
