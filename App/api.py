@@ -17,22 +17,28 @@ class Api(object):
 
     def is_near_obs(self, coords, walls):
         snake_head = coords[-1]
-        return [self.is_near(coords, walls, '+x'), self.is_near(coords, walls, '-x'), self.is_near(coords, walls, '+y'), self.is_near(coords, walls, '-y')]
+        return [self.is_near_px(coords, walls), self.is_near_mx(coords, walls), self.is_near_py(coords, walls), self.is_near_my(coords, walls)]
 
-    def is_near (self, coords, walls, type):
+    def is_near_px(self, coords, walls):
         snake_head = coords[-1]
-        if (type == '-x'):
-            next = [snake_head[0] - 1, snake_head[1]]
-            return ((next in coords) or next == [0, snake_head[1]])
-        elif (type == '+x'):
-            next = [snake_head[0] + 1, snake_head[1]]
-            return ((next in coords) or next == [walls[0][1], snake_head[1]])
-        elif (type == '+y'):
-            next = [snake_head[0], snake_head[1] - 1]
-            return ((next in coords) or next == [snake_head[0], 0])
-        elif (type == '-y'):
-            next = [snake_head[0], snake_head[1] + 1]
-            return ((next in coords) or next == [snake_head[0], walls[1][1]])
+        next = [snake_head[0] + 1, snake_head[1]]
+        return ((next in coords) or next == [walls[0][1], snake_head[1]])
+
+    def is_near_mx(self, coords, walls):
+        snake_head = coords[-1]
+        next = [snake_head[0] - 1, snake_head[1]]
+        return ((next in coords) or next == [0, snake_head[1]])
+
+    def is_near_py(self, coords, walls):
+        snake_head = coords[-1]
+        next = [snake_head[0], snake_head[1] - 1]
+        return ((next in coords) or next == [snake_head[0], 0])
+
+    def is_near_my(self, coords, walls):
+        snake_head = coords[-1]
+        next = [snake_head[0], snake_head[1] + 1]
+        return ((next in coords) or next == [snake_head[0], walls[1][1]])
+
 
     def update(self, coords, food):
         pass
