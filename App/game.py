@@ -7,6 +7,7 @@ from food import *
 from board import *
 from api import *
 from const import *
+from Neural.neural_network import *
 
 pygame.font.init()
 
@@ -18,6 +19,7 @@ class Game(object):
         self.snake = Snake()  # змейка
         self.food = Food()  # еда змейки
         self.api = Api()  # апи
+        self.neiro = Neiro()  # нейронка
         self.font = pygame.font.SysFont('MS Gothic', 30) # шрифт
         self.best_score = 0 # лучший счет
 
@@ -46,6 +48,7 @@ class Game(object):
         self.screen.update()
 
     def update(self):
+        self.food.update(self.snake.coords)
         self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
 
         if (SNAKE_AUTO == 1):
@@ -53,7 +56,6 @@ class Game(object):
 
         self.snake.update()
         self.collision_check()
-        self.food.update(self.snake.coords)
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:

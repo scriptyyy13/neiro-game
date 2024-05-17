@@ -11,10 +11,10 @@ class Api(object):
         self.food = (0, 0)
 
     def snake_to_food(self):
-        self.coords = self.coords[-1]
-        one = self.coords[0] - self.food[0]
-        two = self.coords[1] - self.food[1]
-        return (one, two)
+        self.coords1 = self.coords[-1]
+        one = self.coords1[0] - self.food[0]
+        two = self.coords1[1] - self.food[1]
+        return abs(one+two)
 
     def is_near_obs(self):
         return [self.is_near_px(), self.is_near_mx(), self.is_near_py(), self.is_near_my()]
