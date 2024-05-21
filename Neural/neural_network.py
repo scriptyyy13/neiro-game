@@ -53,18 +53,18 @@ class Neiro(object):
         elif (new_dist >= self.prev_dist):
             error = best
         else:
-            error = 1-best
-        wdelta = error*self.sigmoid(self.vihod[best_index])
-        for i in range(4):
-            for j in range(128):
-                self.vnutr_to_vihod[i][j] = self.vnutr_to_vihod[i][j] - best * wdelta * self.lirrate
+            error = 1 - best
+        wdelta = error * self.sigmoid(self.vihod[best_index])
+        for j in range(128):
+            self.vnutr_to_vihod[best_index][j] = self.vnutr_to_vihod[best_index][j] - self.vnutr2[j] * wdelta * self.lirrate
         for i in range(128):
             for j in range(128):
-                self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] - best * wdelta * self.lirrate
+                wdelta = error * self.sigmoid(self.vnutr1[j])
+                self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] - self.vnutr1[j] * wdelta * self.lirrate
         for i in range(128):
             for j in range(6):
-                self.vhod_to_vnutr[i][j]=self.vhod_to_vnutr[i][j]-best*wdelta*self.lirrate
-
+                wdelta = error * self.sigmoid(self.vhod[j])
+                self.vhod_to_vnutr[i][j] = self.vhod_to_vnutr[i][j] - self.vhod[j] * wdelta * self.lirrate
 
     def sigmoid(self, x):
          return 1 / (1 + math.exp(-x))
