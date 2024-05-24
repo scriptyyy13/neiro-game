@@ -53,9 +53,35 @@ class Game(object):
 
         if (SNAKE_AUTO == 1):
             self.snake.auto_hodilka(self.api.snake_to_food())
+        elif (SNAKE_AUTO == 2):
+            data=self.api.is_near_obs()
+            for i in range(4):
+                if (data[i] == True):
+                    data[i]=1
+                else:
+                    data[i]=0
+            data.append(self.snake.length)
+            data.append(self.api.snake_to_food())
+            where_to_go = self.neiro.run(data)
+            max_index = 0
+            maxi = 0
+            for j in range(4):
+                if (where_to_go[j] > maxi):
+                    maxi = where_to_go[j]
+                    max_index = j
+            print(where_to_go, self.api.snake_to_food())
+            if max_index == 2 and self.snake.vector[1] == 0:
+                self.snake.vector = (0, -1)
+            elif max_index == 1 and self.snake.vector[0] == 0:
+                self.snake.vector = (-1, 0)
+            elif max_index == 3 and self.snake.vector[1] == 0:
+                self.snake.vector = (0, 1)
+            elif max_index == 0 and self.snake.vector[0] == 0:
+                self.snake.vector = (1, 0)
 
         self.snake.update()
         self.collision_check()
+        self.neiro.learn(self.api.snake_to_food(), self.snake.length)
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:
