@@ -69,7 +69,6 @@ class Game(object):
                 if (where_to_go[j] > maxi):
                     maxi = where_to_go[j]
                     max_index = j
-            print(where_to_go, self.api.snake_to_food())
             if max_index == 2 and self.snake.vector[1] == 0:
                 self.snake.vector = (0, -1)
             elif max_index == 1 and self.snake.vector[0] == 0:
@@ -79,9 +78,9 @@ class Game(object):
             elif max_index == 0 and self.snake.vector[0] == 0:
                 self.snake.vector = (1, 0)
 
+        self.neiro.learn(self.api.snake_to_food(), self.snake.length, self.snake.coords, self.food.food_pos, self.api.is_near_obs())
         self.snake.update()
         self.collision_check()
-        self.neiro.learn(self.api.snake_to_food(), self.snake.length)
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:

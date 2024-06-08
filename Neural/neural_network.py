@@ -29,66 +29,98 @@ class Neiro(object):
         for i in range(128):  # считаем первый внутренний
             tmp_a = 0
             for j in range(6):
-                tmp_a += self.sigmoid(self.vhod[j]) * self.vhod_to_vnutr[i][j]
-            tmp_a = round(tmp_a ,7)
+                tmp_a += self.vhod[j] * self.vhod_to_vnutr[i][j]
+            tmp_a = round(tmp_a, 7)
             self.vnutr1[i] = tmp_a
 
         norm_n = max(self.vnutr1)+min(self.vnutr1)
         for i in range(128):  # нормализуем
-            self.vnutr1[i] = self.vnutr1[i]/norm_n
+            self.vnutr1[i] = round(self.vnutr1[i]/norm_n, 7)
 
         for i in range(128):  # считаем второй внутренний
             tmp_a = 0
             for j in range(128):
-                tmp_a += self.sigmoid(self.vnutr1[j]) * self.vnutr_to_vnutr[j][i]
-            tmp_a = round(tmp_a ,7)
+                tmp_a += self.vnutr1[j] * self.vnutr_to_vnutr[j][i]
+            tmp_a = round(tmp_a, 7)
             self.vnutr2[i] = tmp_a
 
-            norm_n = max(self.vnutr2) + min(self.vnutr2)
-            for i in range(128):  # нормализуем
-                self.vnutr2[i] = self.vnutr2[i] / norm_n
+        tmp_mm = min(self.vnutr2)
+        if (tmp_mm < 0):
+            tmp_mm*=-1
+
+        norm_n = max(self.vnutr2) + tmp_mm
+        for i in range(128):  # нормализуем
+            self.vnutr2[i] = round(self.vnutr2[i] / norm_n, 7)
 
         for i in range(4):  # считаем выходной
             tmp_a = 0
             for j in range(128):
-                tmp_a += self.sigmoid(self.vnutr2[j]) * self.vnutr_to_vihod[i][j]
-            tmp_a = round(tmp_a ,7)
-            self.vihod[i] = round(self.sigmoid(tmp_a), 7)
+                tmp_a += self.vnutr2[j] * self.vnutr_to_vihod[i][j]
+            tmp_a = round(tmp_a, 7)
+            self.vihod[i] = round(tmp_a, 7)
 
-        #norm_n = max(self.vihod) + min(self.vihod)
-        #for i in range(4):  # нормализуем
-        #    self.vihod[i] = self.vihod[i] / norm_n
+        tmp_mm = min(self.vihod)
+        if (tmp_mm < 0):
+            tmp_mm *= -1
 
+        norm_n = max(self.vihod) + tmp_mm
+        for i in range(4):  # нормализуем
+            self.vihod[i] = round(self.vihod[i] / norm_n, 7)
+
+        #print('vhod: ', self.vhod)
+        #print('vnutr1: ', self.vnutr1)
+        #print('vnutr2: ',self.vnutr2)
+        print('vihod: ', self.vihod)
         return self.vihod
 
-    def learn(self, new_dist, new_length):
-        best = 0
-        best_index = 0
+    def learn(self, new_dist, new_length, snake, foodcoords, nearobs):
+        sled_steps = [0, 0, 0, 0]
+        now_snake = snake[-1]
         for i in range(4):
-            if (self.vihod[i] > best):
-                best = self.vihod[i]
-                best_index = i
-            if (new_length < self.prev_length):
-                error_best = best
-            elif (new_dist >= self.prev_dist):
-                error_best = best
-            else:
-                error_best = 1 - best
-        print('err: ', error_best, self.vihod)
+            if (i == 0):
+                tmp_new_snake = (now_snake[0] + 1, now_snake[1])
+            if (i == 1):
+                tmp_new_snake = (now_snake[0] - 1, now_snake[1])
+            if (i == 2):
+                tmp_new_snake = (now_snake[0], now_snake[1] + 1)
+            if (i == 3):
+                tmp_new_snake = (now_snake[0], now_snake[1] - 1)
+            new_dist_food = round(math.hypot(foodcoords[0] - tmp_new_snake[0], foodcoords[1] - tmp_new_snake[1]), 3)
+            if (new_dist_food < new_dist and nearobs[i]==False):
+                sled_steps[i] = 1
+
         for idx in range(4): # идем от каждого выходного значения
-            if (best_index == idx):
-                error = error_best
-            else:
-                error = self.vhod[idx]
-            print("!!! err: ", idx, error)
-            wdelta = error * self.sigmoid(self.vihod[idx])
+            error = abs(sled_steps[idx]-self.vhod[idx])
+            wdelta = error * self.vihod[idx]
+
+            mini = float('+INF')
+            maxi = float('-INF')
             for j in range(128):
                 self.vnutr_to_vihod[idx][j] = self.vnutr_to_vihod[idx][j] - self.vnutr2[j] * wdelta * self.lirrate
+                if (mini > self.vnutr_to_vihod[idx][j]):
+                    mini = self.vnutr_to_vihod[idx][j]
+                if (maxi < self.vnutr_to_vihod[idx][j]):
+                    maxi = self.vnutr_to_vihod[idx][j]
+            for j in range(128):
+                self.vnutr_to_vihod[idx][j] += abs(mini)
+            for j in range(128):
+                self.vnutr_to_vihod[idx][j]=self.vnutr_to_vihod[idx][j]/(maxi+abs(mini))
+
             for i in range(128):
                 error_lvl_one = wdelta * self.vnutr_to_vnutr[i][idx]
-                wdelta_lvl_one = error_lvl_one * self.sigmoid(self.vnutr1[idx])
+                wdelta_lvl_one = error_lvl_one * self.vnutr1[idx]
+                mini = float('+INF')
+                maxi = float('-INF')
                 for j in range(128):
                     self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] - self.vnutr1[j] * wdelta_lvl_one * self.lirrate
+                    if (mini > self.vnutr_to_vnutr[i][j]):
+                        mini = self.vnutr_to_vnutr[i][j]
+                    if (maxi < self.vnutr_to_vnutr[i][j]):
+                        maxi = self.vnutr_to_vnutr[i][j]
+                for j in range(128):
+                    self.vnutr_to_vnutr[i][j] += abs(mini)
+                for j in range(128):
+                    self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] / (maxi + abs(mini))
 
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))

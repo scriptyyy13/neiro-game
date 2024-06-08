@@ -13,7 +13,7 @@ class Api(object):
 
     def snake_to_food(self):
         self.coords1 = self.coords[-1]
-        return round(math.hypot(self.food[0] - self.coords1[0], self.food[1] - self.coords1[1]))
+        return round(math.hypot(self.food[0] - self.coords1[0], self.food[1] - self.coords1[1]), 3)
 
     def is_near_obs(self):
         return [self.is_near_px(), self.is_near_mx(), self.is_near_py(), self.is_near_my()]
