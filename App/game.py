@@ -96,6 +96,10 @@ class Game(object):
                 self.snake.vector = (0, 1)
             elif event.key == pygame.K_d and self.snake.vector[0] == 0:
                 self.snake.vector = (1, 0)
+            elif event.key == pygame.K_r:
+                self.neiro.save()
+            elif event.key == pygame.K_t:
+                self.neiro.read()
 
     def collision_check(self):
         if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==

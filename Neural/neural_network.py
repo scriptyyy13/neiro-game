@@ -5,6 +5,7 @@ import numpy as np
 from App.const import *
 
 
+
 class Neiro(object):
     def __init__(self):
         self.vhod = [0, 0, 0, 0, 0, 0] # первые четыре это значения наличия препятствия, пятое длинна змейки, шестое - расстояние до еды
@@ -17,6 +18,39 @@ class Neiro(object):
         self.lirrate = 0.9
         self.prev_dist = 0
         self.prev_length = 0
+
+    def save(self): # сохранить
+        matrix = self.vhod_to_vnutr
+        with open("vhod_to_vnutr_" + str(MODEL_TYPE) + ".txt", "w") as f:
+            f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
+
+        matrix = self.vnutr_to_vnutr
+        with open("vnutr_to_vnutr_" + str(MODEL_TYPE) + ".txt", "w") as f:
+            f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
+
+        matrix = self.vnutr_to_vihod
+        with open("vnutr_to_vihod_" + str(MODEL_TYPE) + ".txt", "w") as f:
+            f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
+
+    def read(self): # последнее сохранение
+        f = open("vhod_to_vnutr_" + str(MODEL_TYPE) + ".txt")
+        to_save = []
+        for line in f:
+            to_save.append(list(map(float, line.replace("\n", '').split())))
+        self.vhod_to_vnutr = to_save
+
+        f = open("vnutr_to_vnutr_" + str(MODEL_TYPE) + ".txt")
+        to_save = []
+        for line in f:
+            to_save.append(list(map(float, line.replace("\n", '').split())))
+        self.vnutr_to_vnutr = to_save
+
+        f = open("vnutr_to_vihod_" + str(MODEL_TYPE) + ".txt")
+        to_save = []
+        for line in f:
+            to_save.append(list(map(float, line.replace("\n", '').split())))
+        self.vnutr_to_vihod = to_save
+
 
     def run(self, vhod):
         self.vhod = vhod
