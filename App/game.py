@@ -22,6 +22,7 @@ class Game(object):
         self.neiro = Neiro()  # нейронка
         self.font = pygame.font.SysFont('MS Gothic', 30) # шрифт
         self.best_score = 0 # лучший счет
+        self.ndu = 0 # нужность ресета
 
     def run(self):
         self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
@@ -49,6 +50,7 @@ class Game(object):
 
     def update(self):
         self.food.update(self.snake.coords)
+        self.ndu = 0
         self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
 
         if (SNAKE_AUTO == 1):
@@ -99,9 +101,11 @@ class Game(object):
         if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
                 self.snake.coords[-1][0]):
             self.snake.snake_reset()  # ресет змейки при врезании в стены по бокам
+            self.ndu = 1
         if (self.board.get_wall_y()[0] == self.snake.coords[-1][1] or self.board.get_wall_y()[1] ==
                 self.snake.coords[-1][1]):
             self.snake.snake_reset()  # ресет змейки при врезании в стены сверху и снизу
+            self.ndu = 1
 
         if (self.snake.coords[-1][0] == self.food.food_pos[0] and self.snake.coords[-1][1] == self.food.food_pos[1]):
             self.snake.length += 1  # увеличиваем на 1 змейку, при поедании еды

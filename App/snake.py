@@ -33,11 +33,11 @@ class Snake(object):
                              pygame.Rect(coords[i][0] * self.step, coords[i][1] * self.step, self.step, self.step))
 
     def auto_hodilka (self, where):
-        if (where[0] > 0):
+        if (where[0] == False):
             self.vector = (-1, 0)
-        if (where[0] < 0):
+        if (where[0]  == False):
             self.vector = (1, 0)
-        if (where[1] > 0):
+        if (where[1]  == False):
             self.vector = (0, -1)
-        if (where[1] < 0):
+        if (where[1]  == False):
              self.vector = (0, 1)
