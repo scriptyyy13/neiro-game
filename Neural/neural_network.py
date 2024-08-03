@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import os
 import numpy as np
 from App.const import *
 
@@ -15,37 +16,39 @@ class Neiro(object):
         self.vnutr2 = [0 for i in range(128)]
         self.vnutr_to_vihod = [[random.uniform(0, 1) for i in range(128)] for i in range(4)]
         self.vihod = [0, 0, 0, 0]
-        self.lirrate = 0.9
+        self.lirrate = 0.4
         self.prev_dist = 0
         self.prev_length = 0
 
-    def save(self): # сохранить
+    def save(self, number): # сохранить
         matrix = self.vhod_to_vnutr
-        with open("vhod_to_vnutr_" + str(MODEL_TYPE) + ".txt", "w") as f:
+        if not os.path.isdir("../Saves/" + str(number)):
+            os.mkdir("../Saves/" + str(number))
+        with open("../Saves/" + str(number)+"/vhod_to_vnutr_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
         matrix = self.vnutr_to_vnutr
-        with open("vnutr_to_vnutr_" + str(MODEL_TYPE) + ".txt", "w") as f:
+        with open("../Saves/" + str(number)+"/vnutr_to_vnutr_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
         matrix = self.vnutr_to_vihod
-        with open("vnutr_to_vihod_" + str(MODEL_TYPE) + ".txt", "w") as f:
+        with open("../Saves/" + str(number)+"/vnutr_to_vihod_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
-    def read(self): # последнее сохранение
-        f = open("vhod_to_vnutr_" + str(MODEL_TYPE) + ".txt")
+    def read(self, number): # последнее сохранение
+        f = open("../Saves/" + str(number)+"/vhod_to_vnutr_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
         self.vhod_to_vnutr = to_save
 
-        f = open("vnutr_to_vnutr_" + str(MODEL_TYPE) + ".txt")
+        f = open("../Saves/" + str(number)+"/vnutr_to_vnutr_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
         self.vnutr_to_vnutr = to_save
 
-        f = open("vnutr_to_vihod_" + str(MODEL_TYPE) + ".txt")
+        f = open("../Saves/" + str(number)+"/vnutr_to_vihod_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
@@ -100,11 +103,6 @@ class Neiro(object):
         norm_n = max(self.vihod) + tmp_mm
         for i in range(4):  # нормализуем
             self.vihod[i] = round(self.vihod[i] / norm_n, 7)
-
-        #print('vhod: ', self.vhod)
-        #print('vnutr1: ', self.vnutr1)
-        #print('vnutr2: ',self.vnutr2)
-        print('vihod: ', self.vihod)
         return self.vihod
 
     def learn(self, new_dist, new_length, snake, foodcoords, nearobs):

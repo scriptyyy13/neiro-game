@@ -23,6 +23,7 @@ class Game(object):
         self.font = pygame.font.SysFont('MS Gothic', 30) # шрифт
         self.best_score = 0 # лучший счет
         self.ndbr = 0 # нужность ресета
+        self.model_number = 0 # номер модели
 
     def run(self):
         self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
@@ -97,9 +98,9 @@ class Game(object):
             elif event.key == pygame.K_d and self.snake.vector[0] == 0:
                 self.snake.vector = (1, 0)
             elif event.key == pygame.K_r:
-                self.neiro.save()
+                self.neiro.save(self.model_number)
             elif event.key == pygame.K_t:
-                self.neiro.read()
+                self.neiro.read(self.model_number)
 
     def collision_check(self):
         if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
@@ -118,4 +119,12 @@ class Game(object):
 
 if __name__ == '__main__':
     game = Game()
+    print("Напишите номер модели, для открытия:")
+    game.model_number = int(input())
+    if not os.path.isdir("../Saves/" + str(game.model_number)):
+        os.mkdir("../Saves/" + str(game.model_number))
+        print("Модель не существует, было создано новое сохранение")
+    else:
+        game.neiro.read(game.model_number)
+        print("Модель найдена, сохранение прочитано")
     game.run()
