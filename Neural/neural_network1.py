@@ -38,19 +38,19 @@ class Neiro(object):
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
-        self.vhod_to_vnutr = to_save
+        self.vhod_to_vnutr = np.array(to_save)
 
         f = open("../Saves/" + str(number)+"/vnutr_to_vnutr_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
-        self.vnutr_to_vnutr = to_save
+        self.vnutr_to_vnutr = np.array(to_save)
 
         f = open("../Saves/" + str(number)+"/vnutr_to_vihod_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
-        self.vnutr_to_vihod = to_save
+        self.vnutr_to_vihod = np.array(to_save)
 
     def count_vnutr1(self):
         self.vnutr1 = np.round(np.dot(self.vhod_to_vnutr, self.vhod), 7)
@@ -120,21 +120,16 @@ class Neiro(object):
             for j in range(128):
                 self.vnutr_to_vihod[idx][j]=self.vnutr_to_vihod[idx][j]/(maxi+abs(mini))
 
-            for i in range(128):
-                error_lvl_one = wdelta * self.vnutr_to_vnutr[i][idx]
-                wdelta_lvl_one = error_lvl_one * self.vnutr1[idx]
-                mini = float('+INF')
-                maxi = float('-INF')
-                for j in range(128):
-                    self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] - self.vnutr1[j] * wdelta_lvl_one * self.lirrate
-                    if (mini > self.vnutr_to_vnutr[i][j]):
-                        mini = self.vnutr_to_vnutr[i][j]
-                    if (maxi < self.vnutr_to_vnutr[i][j]):
-                        maxi = self.vnutr_to_vnutr[i][j]
-                for j in range(128):
-                    self.vnutr_to_vnutr[i][j] += abs(mini)
-                for j in range(128):
-                    self.vnutr_to_vnutr[i][j] = self.vnutr_to_vnutr[i][j] / (maxi + abs(mini))
+            error_lvl_one = wdelta * self.vnutr_to_vnutr[:, idx]
+            wdelta_lvl_one = error_lvl_one * self.vnutr1[idx]
+
+            self.vnutr_to_vnutr -= (self.vnutr1[:, np.newaxis] * wdelta_lvl_one) * self.lirrate
+
+            mini = np.min(self.vnutr_to_vnutr, axis=1)
+            maxi = np.max(self.vnutr_to_vnutr, axis=1)
+
+            self.vnutr_to_vnutr += np.abs(mini)[:, np.newaxis]
+            self.vnutr_to_vnutr /= (maxi + np.abs(mini))[:, np.newaxis]
 
     def learn(self, new_dist, new_length, snake, foodcoords, nearobs):
         sled_steps = [0, 0, 0, 0]
