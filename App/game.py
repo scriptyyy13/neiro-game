@@ -7,7 +7,7 @@ from food import *
 from board import *
 from api import *
 from const import *
-from Neural.neural_network import *
+from Neural.neural_network1 import *
 
 pygame.font.init()
 
