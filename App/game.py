@@ -1,5 +1,6 @@
 import pygame
 import random
+import logging
 
 from screen import *
 from snake import *
@@ -24,6 +25,8 @@ class Game(object):
         self.best_score = 0 # лучший счет
         self.ndbr = 0 # нужность ресета
         self.model_number = 0 # номер модели
+        self.logs = logging.basicConfig(level=logging.INFO, filename="../Saves/snake.log",filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s")
 
     def run(self):
         self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
@@ -34,6 +37,7 @@ class Game(object):
 
             if (self.snake.score > self.best_score):
                 self.best_score = self.snake.score
+                logging.info(f"Новый лучший счет: {str(self.best_score)}")
 
             self.draw()
 
@@ -98,8 +102,10 @@ class Game(object):
                 self.snake.vector = (1, 0)
             elif event.key == pygame.K_r:
                 self.neiro.save(self.model_number)
+                logging.info(f"Сохранено {self.model_number}")
             elif event.key == pygame.K_t:
                 self.neiro.read(self.model_number)
+                logging.info(f"Сохранение прочитано {self.model_number}")
 
     def collision_check(self):
         if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
@@ -123,7 +129,9 @@ if __name__ == '__main__':
     if not os.path.isdir("../Saves/" + str(game.model_number)):
         os.mkdir("../Saves/" + str(game.model_number))
         print("Модель не существует, было создано новое сохранение")
+        logging.info(f"Было создано сохранение {str(game.model_number)}")
     else:
         game.neiro.read(game.model_number)
         print("Модель найдена, сохранение прочитано")
+        logging.info(f"Открыто сохранение {str(game.model_number)}")
     game.run()
