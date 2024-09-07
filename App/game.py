@@ -30,7 +30,6 @@ class Game(object):
         while self.running:
             for event in pygame.event.get():
                 self.event_handler(event)
-
             self.update()
 
             if (self.snake.score > self.best_score):
