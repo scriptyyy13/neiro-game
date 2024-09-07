@@ -6,10 +6,31 @@ import numpy as np
 from App.const import *
 
 
-
 class Neiro(object):
+    """ В классе Neiro происходят все действия с нейронкой
+
+    save сохроняет нейронку в папку с номером
+
+    read считывает сохронение нейронки с определенным номером
+
+    count_vnutr1 подсчитывает первый внутренний слой
+
+    count_vnutr2 подсчитывает второй внутренний слой
+
+    count_vihod подсчитывает выходной слой
+
+    run основной метод работы нейронки, задействует подсчеты слоев
+
+    learn метод обучения
+
+    count_error подсчитать ошибку
+
+    count_learn обучается, учитывая ошибку
+
+    """
     def __init__(self):
-        self.vhod = np.zeros(6) # первые четыре это значения наличия препятствия, пятое длинна змейки, шестое - расстояние до еды
+        self.vhod = np.zeros(
+            6)  # первые четыре это значения наличия препятствия, пятое длинна змейки, шестое - расстояние до еды
         self.vhod_to_vnutr = np.random.uniform(0, 1, (128, 6))
         self.vnutr1 = np.zeros(128)
         self.vnutr_to_vnutr = np.random.uniform(0, 1, (128, 128))
@@ -18,35 +39,35 @@ class Neiro(object):
         self.vihod = np.zeros(4)
         self.lirrate = 0.4
 
-    def save(self, number): # сохранить
+    def save(self, number):  # сохранить
         matrix = self.vhod_to_vnutr
         if not os.path.isdir("../Saves/" + str(number)):
             os.mkdir("../Saves/" + str(number))
-        with open("../Saves/" + str(number)+"/vhod_to_vnutr_" + str(number) + ".txt", "w") as f:
+        with open("../Saves/" + str(number) + "/vhod_to_vnutr_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
         matrix = self.vnutr_to_vnutr
-        with open("../Saves/" + str(number)+"/vnutr_to_vnutr_" + str(number) + ".txt", "w") as f:
+        with open("../Saves/" + str(number) + "/vnutr_to_vnutr_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
         matrix = self.vnutr_to_vihod
-        with open("../Saves/" + str(number)+"/vnutr_to_vihod_" + str(number) + ".txt", "w") as f:
+        with open("../Saves/" + str(number) + "/vnutr_to_vihod_" + str(number) + ".txt", "w") as f:
             f.write('\n'.join([' '.join(map(str, line)) for line in matrix]))
 
-    def read(self, number): # последнее сохранение
-        f = open("../Saves/" + str(number)+"/vhod_to_vnutr_" + str(number) + ".txt")
+    def read(self, number):  # последнее сохранение
+        f = open("../Saves/" + str(number) + "/vhod_to_vnutr_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
         self.vhod_to_vnutr = np.array(to_save)
 
-        f = open("../Saves/" + str(number)+"/vnutr_to_vnutr_" + str(number) + ".txt")
+        f = open("../Saves/" + str(number) + "/vnutr_to_vnutr_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
         self.vnutr_to_vnutr = np.array(to_save)
 
-        f = open("../Saves/" + str(number)+"/vnutr_to_vihod_" + str(number) + ".txt")
+        f = open("../Saves/" + str(number) + "/vnutr_to_vihod_" + str(number) + ".txt")
         to_save = []
         for line in f:
             to_save.append(list(map(float, line.replace("\n", '').split())))
@@ -76,11 +97,10 @@ class Neiro(object):
         for i in range(4):  # нормализуем
             self.vihod[i] = round(self.vihod[i] / norm_n, 7)
 
-
     def run(self, vhod):
         self.vhod = vhod
-        self.vhod[-1] = round(self.vhod[-1]/80, 7)  # делаем значение расстояние мелким значением
-        self.vhod[-2] = round(self.vhod[-2]/3072, 7)   # делаем значение длинны змейки мелким значением
+        self.vhod[-1] = round(self.vhod[-1] / 80, 7)  # делаем значение расстояние мелким значением
+        self.vhod[-2] = round(self.vhod[-2] / 3072, 7)  # делаем значение длинны змейки мелким значением
 
         self.count_vnutr1()
         self.count_vnutr2()
@@ -99,13 +119,13 @@ class Neiro(object):
             if (i == 3):
                 tmp_new_snake = (now_snake[0], now_snake[1] - 1)
             new_dist_food = round(math.hypot(foodcoords[0] - tmp_new_snake[0], foodcoords[1] - tmp_new_snake[1]), 3)
-            if (new_dist_food < new_dist and nearobs[i]==False):
+            if (new_dist_food < new_dist and nearobs[i] == False):
                 sled_steps[i] = 1
         return sled_steps
 
     def count_learn(self, sled_steps):
-        for idx in range(4): # идем от каждого выходного значения
-            error = abs(sled_steps[idx]-self.vhod[idx])
+        for idx in range(4):  # идем от каждого выходного значения
+            error = abs(sled_steps[idx] - self.vhod[idx])
             wdelta = error * self.vihod[idx]
             mini = float('+INF')
             maxi = float('-INF')
@@ -118,7 +138,7 @@ class Neiro(object):
             for j in range(128):
                 self.vnutr_to_vihod[idx][j] += abs(mini)
             for j in range(128):
-                self.vnutr_to_vihod[idx][j]=self.vnutr_to_vihod[idx][j]/(maxi+abs(mini))
+                self.vnutr_to_vihod[idx][j] = self.vnutr_to_vihod[idx][j] / (maxi + abs(mini))
 
             error_lvl_one = wdelta * self.vnutr_to_vnutr[:, idx]
             wdelta_lvl_one = error_lvl_one * self.vnutr1[idx]
@@ -137,10 +157,9 @@ class Neiro(object):
         sled_steps = self.count_error(sled_steps, now_snake, foodcoords, nearobs, new_dist)
         self.count_learn(sled_steps)
 
-
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
 
     def sigmoid_dx(self, x):
-         sig = 1 / (1 + np.exp(-x))
-         return sig * (1 - sig)
+        sig = 1 / (1 + np.exp(-x))
+        return sig * (1 - sig)
