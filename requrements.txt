@@ -1,2 +1,4 @@
 pygame
 freetype-py
+logging
+numpy
