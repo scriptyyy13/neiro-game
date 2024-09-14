@@ -28,38 +28,36 @@ class Game(object):
         self.logs = logging.basicConfig(level=logging.INFO, filename="../Saves/snake.log",filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s")
 
-    def run(self):
-        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
+    def run(self): # основная функция
+        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y())) # первая передача данных в апи
         while self.running:
-            for event in pygame.event.get():
+            for event in pygame.event.get(): # обработчик событий
                 self.event_handler(event)
-            self.update()
+            self.update() # запускаем обновление
 
-            if (self.snake.score > self.best_score):
+            if (self.snake.score > self.best_score): # обновление счета
                 self.best_score = self.snake.score
                 logging.info(f"Новый лучший счет: {str(self.best_score)}")
 
-            self.draw()
+            self.draw() # вызов отрисовщика
 
-    def draw(self):
-        self.screen.screen.fill(WHITE)
-        self.board.draw(self.screen.screen)
-        self.snake.draw_snake(self.snake.coords, self.screen.screen)
-        self.food.draw(self.screen.screen)
-        text_surface = self.font.render(str(self.snake.score), False, (0, 0, 0))
+    def draw(self): # отрисовка
+        self.screen.screen.fill(WHITE)  # белый фон
+        self.board.draw(self.screen.screen) # рисуем границы
+        self.snake.draw_snake(self.snake.coords, self.screen.screen) # рисуем змейку
+        self.food.draw(self.screen.screen) # рисуем еду
+        text_surface = self.font.render(str(self.snake.score), False, (0, 0, 0)) # счет
         self.screen.screen.blit(text_surface, (40, 400))
-        text_surface1 = self.font.render(str(self.best_score), False, (0, 0, 0))
+        text_surface1 = self.font.render(str(self.best_score), False, (0, 0, 0)) # лучший счет
         self.screen.screen.blit(text_surface1, (40, 430))
-        self.screen.update()
+        self.screen.update() # обновляем кадр
 
     def update(self):
-        self.food.update(self.snake.coords, self.ndbr)
+        self.food.update(self.snake.coords, self.ndbr) # обновляем еду
         self.ndbr = 0
-        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y()))
+        self.api.update(self.snake.coords, self.food.food_pos, (self.board.get_wall_x(), self.board.get_wall_y())) # обновляем апи
 
-        if (SNAKE_AUTO == 1):
-            self.snake.auto_hodilka(self.api.snake_to_food())
-        elif (SNAKE_AUTO == 2):
+        if (SNAKE_AUTO == 2): # отправляем инфу в нейронку
             data=self.api.is_near_obs()
             for i in range(4):
                 if (data[i] == True):
@@ -84,12 +82,12 @@ class Game(object):
             elif max_index == 0 and self.snake.vector[0] == 0:
                 self.snake.vector = (1, 0)
 
-        self.neiro.learn(self.api.snake_to_food(), self.snake.length, self.snake.coords, self.food.food_pos, self.api.is_near_obs())
-        self.snake.update()
-        self.collision_check()
+        self.neiro.learn(self.api.snake_to_food(), self.snake.length, self.snake.coords, self.food.food_pos, self.api.is_near_obs()) # обучение нейронки
+        self.snake.update() # обновляем змейку
+        self.collision_check() # проверка коллизий
 
-    def event_handler(self, event):
-        if event.type == pygame.QUIT:
+    def event_handler(self, event): # события
+        if event.type == pygame.QUIT: # выход из игры
             raise SystemExit
         elif event.type == pygame.KEYDOWN:  # управление змейкой
             if event.key == pygame.K_w and self.snake.vector[1] == 0:
@@ -100,14 +98,14 @@ class Game(object):
                 self.snake.vector = (0, 1)
             elif event.key == pygame.K_d and self.snake.vector[0] == 0:
                 self.snake.vector = (1, 0)
-            elif event.key == pygame.K_r:
+            elif event.key == pygame.K_r: # сохранение нынешней нейронки
                 self.neiro.save(self.model_number)
                 logging.info(f"Сохранено {self.model_number}")
-            elif event.key == pygame.K_t:
+            elif event.key == pygame.K_t: # прочтение последнего сохранения
                 self.neiro.read(self.model_number)
                 logging.info(f"Сохранение прочитано {self.model_number}")
 
-    def collision_check(self):
+    def collision_check(self): # проверка коллизий
         if (self.board.get_wall_x()[0] == self.snake.coords[-1][0] or self.board.get_wall_x()[1] ==
                 self.snake.coords[-1][0]):
             self.snake.snake_reset()  # ресет змейки при врезании в стены по бокам
@@ -122,7 +120,7 @@ class Game(object):
             self.snake.score += 1
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # стартовая штука
     game = Game()
     print("Напишите номер модели, для открытия:")
     game.model_number = int(input())

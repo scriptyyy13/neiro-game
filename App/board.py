@@ -9,7 +9,7 @@ class Board(object):
         self.s_size = SCREEN_SIZE # размер экрана, для отрисовки поля
         self.step = SNAKE_STEP  # размер сетки змейки
 
-    def draw(self, screen):
+    def draw(self, screen): # рисуем поля
         pygame.draw.rect(screen, (240, 240, 0),
                          pygame.Rect(0, 0, self.step, self.s_size[1]))
         pygame.draw.rect(screen, (240, 240, 0),

@@ -9,5 +9,5 @@ class Screen(object):
         self.clock = pygame.time.Clock()  # для плавности
 
     def update(self):
-        pygame.display.update()
+        pygame.display.update() # обновляем окно игры
         self.clock.tick(FPS)

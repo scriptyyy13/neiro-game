@@ -11,34 +11,34 @@ class Api(object):
         self.walls = ((0, 0), (0, 0))
         self.food = (0, 0)
 
-    def snake_to_food(self):
+    def snake_to_food(self): # расстояние от головы змейки до еды
         self.coords1 = self.coords[-1]
         return round(math.hypot(self.food[0] - self.coords1[0], self.food[1] - self.coords1[1]), 3)
 
-    def is_near_obs(self):
+    def is_near_obs(self): # ближайшие препятствия
         return [self.is_near_px(), self.is_near_mx(), self.is_near_py(), self.is_near_my()]
 
-    def is_near_px(self):
+    def is_near_px(self): # ближайшие по +х
         snake_head = self.coords[-1]
         next = [snake_head[0] + 1, snake_head[1]]
         return ((next in self.coords) or next == [self.walls[0][1], snake_head[1]])
 
-    def is_near_mx(self):
+    def is_near_mx(self): # ближайшие по -х
         snake_head = self.coords[-1]
         next = [snake_head[0] - 1, snake_head[1]]
         return ((next in self.coords) or next == [0, snake_head[1]])
 
-    def is_near_py(self):
+    def is_near_py(self): # ближайшие по +у
         snake_head = self.coords[-1]
         next = [snake_head[0], snake_head[1] - 1]
         return ((next in self.coords) or next == [snake_head[0], 0])
 
-    def is_near_my(self):
+    def is_near_my(self): # ближайшие по -у
         snake_head = self.coords[-1]
         next = [snake_head[0], snake_head[1] + 1]
         return ((next in self.coords) or next == [snake_head[0], self.walls[1][1]])
 
-    def update(self, coords, food, walls):
+    def update(self, coords, food, walls): # обновление информации
         self.coords = coords
         self.food = food
         self.walls = walls

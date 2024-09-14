@@ -12,7 +12,7 @@ class Snake(object):
         self.coords = [[5, 9]]  # координаты головы
         self.score = 0 # счет
 
-    def snake_reset(self):
+    def snake_reset(self): # сброс змейки
         self.length = SNAKE_START_LENGHT
         self.vector = SNAKE_START_VECTOR
         self.coords = [[5, 9]]
@@ -27,17 +27,7 @@ class Snake(object):
         else: # сброс змейки при врезании в себя
             self.snake_reset()
 
-    def draw_snake(self, coords, screen):
+    def draw_snake(self, coords, screen): # отрисовка змейки по кубикам
         for i in range(len(coords)):
             pygame.draw.rect(screen, (0, 0, 0), # отрисовка кусочков змейки
                              pygame.Rect(coords[i][0] * self.step, coords[i][1] * self.step, self.step, self.step))
-
-    def auto_hodilka (self, where):
-        if (where[0] == False):
-            self.vector = (-1, 0)
-        if (where[0]  == False):
-            self.vector = (1, 0)
-        if (where[1]  == False):
-            self.vector = (0, -1)
-        if (where[1]  == False):
-             self.vector = (0, 1)
